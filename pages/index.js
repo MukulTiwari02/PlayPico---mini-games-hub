@@ -16,7 +16,6 @@ export default function Home() {
   return (
     <div>
       <Link href={'/games/flappy-bird'}>Flappy Bird</Link>
-      <Link href={'/games/flappy-bird2'}>Flappy Bird2</Link>
       {/* TODO: Make Responsive for mobiles */}
     </div>
   );
