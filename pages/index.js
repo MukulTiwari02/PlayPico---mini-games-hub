@@ -15,8 +15,7 @@ const geistMono = Geist_Mono({
 export default function Home() {
   return (
     <div>
-      <Link href={'/games/flappy-bird'}>Flappy Bird</Link>
-      <Link href={'/games/flappy-bird2'}>Flappy Bird2</Link>
+      <Link href={"/games/flappy-bird"}>Flappy Bird</Link>
       {/* TODO: Make Responsive for mobiles */}
     </div>
   );
