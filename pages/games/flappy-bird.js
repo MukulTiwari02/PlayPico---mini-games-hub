@@ -50,7 +50,7 @@ export default function FlappyBird() {
           ) {
             setScore((score) => score + 1);
             setScoreSet(true);
-            const scoreAudio = new Audio("/assets/flappy-bird/audio/point.wav")
+            const scoreAudio = new Audio("/assets/flappy-bird/audio/point.wav");
             scoreAudio.play();
           }
           if (pipeLeft < -PIPE_WIDTH) {
