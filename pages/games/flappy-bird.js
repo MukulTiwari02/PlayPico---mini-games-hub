@@ -24,10 +24,10 @@ export default function FlappyBird() {
   const [birdImageIndex, setBirdImageIndex] = useState(0);
   const birdImages = ["upflap", "midflap", "downflap"];
   const GOD_MODE_ENABLED = process.env.GOD_MODE_ENABLED;
-  
+
   useEffect(() => {
     let birdInterval;
-    if (startGame && !gameOver && (birdPos < WALL_HEIGHT - BIRD_HEIGHT)) {
+    if (startGame && !gameOver && birdPos < WALL_HEIGHT - BIRD_HEIGHT) {
       birdInterval = setInterval(() => {
         {
           setBaseTranslate((baseTranslate) => {
@@ -36,8 +36,9 @@ export default function FlappyBird() {
           });
 
           setBirdDownVelocity((currentVelocity) => currentVelocity + GRAVITY);
-          if(!GOD_MODE_ENABLED) setBirdPos((birdPos) => setBirdPos(birdPos + birdDownVelocity));
-          else setBirdPos(WALL_HEIGHT/2);
+          if (!GOD_MODE_ENABLED)
+            setBirdPos((birdPos) => setBirdPos(birdPos + birdDownVelocity));
+          else setBirdPos(WALL_HEIGHT / 2);
 
           if (birdDownVelocity == 0) setBirdImageIndex(1);
           else if (birdDownVelocity < 0) setBirdImageIndex(2);
@@ -49,6 +50,8 @@ export default function FlappyBird() {
           ) {
             setScore((score) => score + 1);
             setScoreSet(true);
+            const scoreAudio = new Audio("/assets/flappy-bird/audio/point.wav")
+            scoreAudio.play();
           }
           if (pipeLeft < -PIPE_WIDTH) {
             setPipeTop(
@@ -65,13 +68,16 @@ export default function FlappyBird() {
         }
       }, 16.667);
     }
-    if (birdPos >= WALL_HEIGHT - BIRD_HEIGHT) if(!GOD_MODE_ENABLED) setGameOver(true);
+    if (birdPos >= WALL_HEIGHT - BIRD_HEIGHT)
+      if (!GOD_MODE_ENABLED) {
+        setGameOver(true);
+      }
     return () => clearInterval(birdInterval);
   });
 
   useEffect(() => {
     let scoreInterval;
-    if (startGame && !gameOver && (birdPos < WALL_HEIGHT - BIRD_HEIGHT)) {
+    if (startGame && !gameOver && birdPos < WALL_HEIGHT - BIRD_HEIGHT) {
       scoreInterval = setInterval(() => {
         {
           // check collision
@@ -89,7 +95,9 @@ export default function FlappyBird() {
               BIRD_LEFT_DISTANCE + BIRD_WIDTH >= pipeLeft &&
               BIRD_LEFT_DISTANCE + BIRD_WIDTH <= pipeLeft + PIPE_WIDTH);
           if (topPipeCollision || bottomPipeCollision) {
-            if(!GOD_MODE_ENABLED)setGameOver(true);
+            if (!GOD_MODE_ENABLED) {
+              setGameOver(true);
+            }
           }
         }
         return () => clearInterval(scoreInterval);
@@ -98,46 +106,7 @@ export default function FlappyBird() {
     return () => clearInterval(scoreInterval);
   }, [birdPos, pipeLeft, pipeTop]);
 
-  useEffect(() => {
-    // Function to handle the keypress
-    const handleKeyPress = (event) => {
-      if (event.code === "Space") {
-        console.log("Spacebar pressed!");
-        if (!startGame) {
-          setBirdPos(0);
-          setBirdDownVelocity(0);
-          setScore(0);
-          setScoreSet(false);
-          setPipeLeft(WALL_WIDTH);
-          setPipeTop(-WALL_HEIGHT / 2);
-          setStartGame(true);
-        }
-    
-        if (gameOver) {
-          setGameOver(false);
-          setScore(0);
-          setScoreSet(false);
-          setStartGame(false);
-        }
-    
-        if (birdPos - BIRD_HEIGHT <= 0) setBirdPos(0);
-        else {
-          setBirdDownVelocity(-8);
-        }
-      }
-    };
-
-    // Add the event listener
-    window.addEventListener("keydown", handleKeyPress);
-
-    // Clean up the event listener on component unmount
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
-  }, []);
-
   function handler(e) {
-    
     if (!startGame) {
       setBirdPos(0);
       setBirdDownVelocity(0);
@@ -161,13 +130,12 @@ export default function FlappyBird() {
     }
   }
 
-  console.log("Game Over :", gameOver, "Game start :", startGame)
+  console.log("Game Over :", gameOver, "Game start :", startGame);
 
   return (
     <div
       className="h-[100vh] w-[100vw] bg-neutral-300 flex flex-col gap-0 justify-center items-center"
       onClick={handler}
-      onKeyDownCapture={handler}
     >
       <div
         className="border-2 border-black border-b-0 relative flex justify-center items-center overflow-hidden"
@@ -247,7 +215,10 @@ export default function FlappyBird() {
             >
               <img
                 className="h-full w-full"
-                src={"/assets/flappy-bird/images/pipe-" +(parseInt(score / 5) % 2 !== 0 ? "red.png" :  "green.png")}
+                src={
+                  "/assets/flappy-bird/images/pipe-" +
+                  (parseInt(score / 5) % 2 !== 0 ? "red.png" : "green.png")
+                }
                 alt=""
               />
             </div>
@@ -262,7 +233,10 @@ export default function FlappyBird() {
             >
               <img
                 className="h-full w-full"
-                src={"/assets/flappy-bird/images/pipe-" +(parseInt(score / 5) % 2 !== 0 ? "red.png" :  "green.png")}
+                src={
+                  "/assets/flappy-bird/images/pipe-" +
+                  (parseInt(score / 5) % 2 !== 0 ? "red.png" : "green.png")
+                }
                 alt=""
               />
             </div>
