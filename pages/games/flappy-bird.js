@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function FlappyBird() {
@@ -12,6 +13,7 @@ export default function FlappyBird() {
   const PIPE_GAP = WALL_HEIGHT / 4;
   const PIPE_WIDTH = 100;
   const velocity = 6;
+  const velocity_multiplier = 1.02;
   const [birdPos, setBirdPos] = useState(0);
   const [startGame, setStartGame] = useState(false);
   const [pipeTop, setPipeTop] = useState(-WALL_HEIGHT / 2);
@@ -32,7 +34,10 @@ export default function FlappyBird() {
         {
           setBaseTranslate((baseTranslate) => {
             if (baseTranslate >= WALL_WIDTH) return 0;
-            else return baseTranslate + velocity;
+            else
+              return (
+                baseTranslate + velocity * Math.pow(velocity_multiplier, score)
+              );
           });
 
           setBirdDownVelocity((currentVelocity) => currentVelocity + GRAVITY);
@@ -64,7 +69,11 @@ export default function FlappyBird() {
             setPipeLeft(WALL_WIDTH);
             setScoreSet(false);
           }
-          setPipeLeft((pipeLeft) => setPipeLeft(pipeLeft - velocity));
+          setPipeLeft((pipeLeft) =>
+            setPipeLeft(
+              pipeLeft - velocity * Math.pow(velocity_multiplier, score)
+            )
+          );
         }
       }, 16.667);
     }
@@ -81,33 +90,72 @@ export default function FlappyBird() {
       scoreInterval = setInterval(() => {
         {
           // check collision
-          const topPipeCollision =
-            (birdPos + BIRD_HEIGHT <= pipeTop + PIPE_HEIGHT &&
-              BIRD_LEFT_DISTANCE + BIRD_WIDTH + 10 >= pipeLeft) ||
-            (birdPos <= pipeTop + PIPE_HEIGHT &&
-              BIRD_LEFT_DISTANCE + BIRD_WIDTH >= pipeLeft &&
-              BIRD_LEFT_DISTANCE + BIRD_WIDTH <= pipeLeft + PIPE_WIDTH);
+          const birdRadius = Math.max(BIRD_WIDTH, BIRD_HEIGHT) / 2;
+          const birdCenterX = BIRD_LEFT_DISTANCE + BIRD_WIDTH / 2;
+          const birdCenterY = birdPos + BIRD_HEIGHT / 2;
 
-          const bottomPipeCollision =
-            (birdPos >= pipeTop + PIPE_HEIGHT + PIPE_GAP &&
-              BIRD_LEFT_DISTANCE + BIRD_WIDTH >= pipeLeft) ||
-            (birdPos + BIRD_HEIGHT + 10 >= pipeTop + PIPE_HEIGHT + PIPE_GAP &&
-              BIRD_LEFT_DISTANCE + BIRD_WIDTH >= pipeLeft &&
-              BIRD_LEFT_DISTANCE + BIRD_WIDTH <= pipeLeft + PIPE_WIDTH);
-          if (topPipeCollision || bottomPipeCollision) {
+          // Top Pipe Collision
+          const closestXTop = Math.max(
+            pipeLeft,
+            Math.min(birdCenterX, pipeLeft + PIPE_WIDTH)
+          );
+          const closestYTop = Math.max(
+            pipeTop,
+            Math.min(birdCenterY, pipeTop + PIPE_HEIGHT)
+          );
+
+          const distanceTop = Math.sqrt(
+            Math.pow(birdCenterX - closestXTop, 2) +
+              Math.pow(birdCenterY - closestYTop, 2)
+          );
+
+          const topPipeCollision = distanceTop < birdRadius;
+
+          // Bottom Pipe Collision
+          const closestXBottom = Math.max(
+            pipeLeft,
+            Math.min(birdCenterX, pipeLeft + PIPE_WIDTH)
+          );
+          const closestYBottom = Math.max(
+            pipeTop + PIPE_HEIGHT + PIPE_GAP,
+            Math.min(
+              birdCenterY,
+              pipeTop + PIPE_HEIGHT + PIPE_GAP + PIPE_HEIGHT
+            )
+          );
+
+          const distanceBottom = Math.sqrt(
+            Math.pow(birdCenterX - closestXBottom, 2) +
+              Math.pow(birdCenterY - closestYBottom, 2)
+          );
+
+          const bottomPipeCollision = distanceBottom < birdRadius;
+
+          // Final Collision Check
+          const collision = topPipeCollision || bottomPipeCollision;
+
+          if (collision) {
             if (!GOD_MODE_ENABLED) {
               setGameOver(true);
             }
           }
         }
         return () => clearInterval(scoreInterval);
-      }, 16.667);
+      }, 5);
     }
     return () => clearInterval(scoreInterval);
   }, [birdPos, pipeLeft, pipeTop]);
 
+  function flyBird() {
+    if (birdPos - BIRD_HEIGHT <= 0) setBirdPos(0);
+    else {
+      setBirdDownVelocity(-8);
+    }
+  }
+
   function handler(e) {
     if (!startGame) {
+      // Start the game
       setBirdPos(0);
       setBirdDownVelocity(0);
       setScore(0);
@@ -115,30 +163,44 @@ export default function FlappyBird() {
       setPipeLeft(WALL_WIDTH);
       setPipeTop(-WALL_HEIGHT / 2);
       setStartGame(true);
-    }
-
-    if (gameOver) {
+      setGameOver(false);
+    } else if (gameOver) {
+      // Reset the game
       setGameOver(false);
       setScore(0);
       setScoreSet(false);
       setStartGame(false);
-    }
-
-    if (birdPos - BIRD_HEIGHT <= 0) setBirdPos(0);
-    else {
-      setBirdDownVelocity(-8);
+    } else {
+      // Jump logic
+      if (birdPos - BIRD_HEIGHT <= 0) {
+        setBirdPos(0); // Prevent bird from flying above the screen
+      } else {
+        setBirdDownVelocity(-8); // Apply upward velocity
+      }
     }
   }
 
-  console.log("Game Over :", gameOver, "Game start :", startGame);
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if ([" ", "ArrowUp"].includes(event.key)) {
+        handler(); // Trigger jump logic
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    // Cleanup on unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [startGame, gameOver, birdPos]);
 
   return (
-    <div
-      className="h-[100vh] w-[100vw] bg-neutral-300 flex flex-col gap-0 justify-center items-center"
-      onClick={handler}
-    >
+    <div className="h-[100vh] w-[100vw] bg-neutral-300 flex flex-col gap-0 justify-center items-center">
+      <Link href={"/"}>Home</Link>
       <div
-        className="border-2 border-black border-b-0 relative flex justify-center items-center overflow-hidden"
+        onClick={handler}
+        className="border-2 select-none border-black border-b-0 relative flex justify-center items-center overflow-hidden"
         style={{ height: `${WALL_HEIGHT}px`, width: `${WALL_WIDTH}px` }}
       >
         <img
@@ -162,7 +224,7 @@ export default function FlappyBird() {
             }}
           >
             <img
-              className="h-full w-full"
+              className="aspect-auto scale-105 h-full w-full"
               src={`/assets/flappy-bird/images/redbird-${birdImages[birdImageIndex]}.png`}
               alt=""
             />
@@ -244,7 +306,7 @@ export default function FlappyBird() {
         )}
       </div>
       <div
-        className="z-5 flex overflow-hidden border-2 border-black border-t-0"
+        className="z-5 select-none flex overflow-hidden border-2 border-black border-t-0"
         style={{ width: `${WALL_WIDTH}px` }}
       >
         <div
