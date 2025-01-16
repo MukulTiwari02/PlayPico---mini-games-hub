@@ -25,7 +25,7 @@ export default function FlappyBird() {
   const [birdDownVelocity, setBirdDownVelocity] = useState(0);
   const [birdImageIndex, setBirdImageIndex] = useState(0);
   const birdImages = ["upflap", "midflap", "downflap"];
-  const GOD_MODE_ENABLED = process.env.GOD_MODE_ENABLED;
+  const GOD_MODE_ENABLED = process.env.GOD_MODE_ENABLED || false;
 
   useEffect(() => {
     let birdInterval;
