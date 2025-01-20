@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Swipe from 'react-easy-swipe2'
 
 export default function GamePage_2048() {
+  const GRID_SIZE = 4;
+  const GRID_GAP = 1;
+
   const [grid, setGrid] = useState([
     [0, 0, 0, 0],
     [0, 0, 0, 0],
@@ -89,6 +93,7 @@ export default function GamePage_2048() {
       addNumber(newGrid);
     }
     setGrid(newGrid);
+    return true;
   }
 
   // Swipe right
@@ -129,11 +134,11 @@ export default function GamePage_2048() {
       addNumber(newGrid);
     }
     setGrid(newGrid);
+    return true;
   }
 
   // Swipe up
   function swipeUp() {
-    console.log('swiping up')
     let newGrid = JSON.parse(JSON.stringify(grid));
     for (let i = 0; i < 4; i++) {
       let slow = 0;
@@ -169,6 +174,7 @@ export default function GamePage_2048() {
       addNumber(newGrid);
     }
     setGrid(newGrid);
+    return true;
   }
 
   // Swipe right
@@ -208,6 +214,7 @@ export default function GamePage_2048() {
       addNumber(newArray);
     }
     setGrid(newArray);
+    return true;
   }
 
   // Handle Key Press
@@ -231,25 +238,67 @@ export default function GamePage_2048() {
   }
 
   return (
-    <div className="h-[100vh] w-[100vw] bg-neutral-300 flex flex-col gap-0 justify-center items-center">
+    <Swipe allowMouseEvents={true} onSwipeUp={swipeUp} onSwipeLeft={swipeLeft} onSwipeRight={swipeRight} onSwipeDown={swipeDown}>
+    <div className="select-none h-[100vh] w-[100vw] bg-neutral-300 flex flex-col gap-0 justify-center items-center">
       <Link href={"/"}>Home</Link>
-      <div className="grid-holder md:h-[30vw] md:w-[30vw] h-[90vw] w-[90vw] border-4 rounded-md bg-purple-900 border-purple-900 grid grid-rows-4 grid-cols-4 gap-1.5 p-1">
-        {grid.map((row) => {
-          return row.map((box) => {
-            return (
-              <div className="bg-red-300 flex justify-center items-center font-bold text-3xl md:text-6xl rounded-md">
-                {box === 0 ? (
-                  <div className="h-full w-full bg-gray-300"></div>
-                ) : (
-                  <div className={`border-4 border-purple-900 h-full w-full flex items-center transition-all justify-center`}>
-                    <img className="h-full w-full" src={`/assets/game_2048/${box}.gif`} alt="" />
-                  </div>
-                )}
-              </div>
-            );
-          });
-        })}
+      <div className="select-none p-[2vmin] border bg-purple-900">
+        <div
+          className={`select-none grid-holder grid grid-cols-4 grid-rows-4 relative gap-[2vmin] border-4 rounded-md bg-purple-900 border-purple-900`}
+        >
+          {grid.map((row, index_y) => {
+            return row.map((box, index_x) => {
+              return (
+                <>
+                  <Cell />
+                  {box === 0 ? (
+                    <></>
+                  ) : (
+                    <Tile
+                      index_x={index_x}
+                      index_y={index_y}
+                      className={`border-4 border-purple-900 select-none `}
+                      value={box}
+                    />
+                  )}
+                </>
+              );
+            });
+          })}
+        </div>
       </div>
-    </div>
+    </div></Swipe>
   );
 }
+
+const Cell = ({ className }) => {
+  return (
+    <div
+      className={
+        "bg-red-300 flex justify-center items-center font-bold text-3xl md:text-6xl select-none h-[20vmin] w-[20vmin] rounded-xl " +
+        { className }
+      }
+    ></div>
+  );
+};
+
+const Tile = ({ index_x, index_y, value, className, children }) => {
+  return (
+    <div
+      className={"absolute overflow-hidden rounded-xl " + { className }}
+      style={{
+        height: "20vmin",
+        width: "20vmin",
+        top: `calc(${index_y}*22vmin)`,
+        left: `calc(${index_x}*22vmin)`,
+        transition: "left 100ms ease-in-out",
+        transition: "top 100ms ease-in-out",
+      }}
+    >
+      <img
+        className="h-full w-full"
+        src={`/assets/game_2048/${value}.gif`}
+        alt=""
+      />
+    </div>
+  );
+};
