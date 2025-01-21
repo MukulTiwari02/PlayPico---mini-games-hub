@@ -1,304 +1,145 @@
+import { Board } from "@/helpers/2048";
 import { useEffect, useState } from "react";
+import "@/styles/game_2048/main.scss";
+import "@/styles/game_2048/styles.scss";
 import Link from "next/link";
-import Swipe from 'react-easy-swipe2'
 
-export default function GamePage_2048() {
-  const GRID_SIZE = 4;
-  const GRID_GAP = 1;
+export default function GamePage_2048Animated() {
+  const [board, setBoard] = useState(new Board());
 
-  const [grid, setGrid] = useState([
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-  ]);
-  const [gridSet, setGridSet] = useState(false);
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyPress, false);
-
-    // Cleanup on unmount
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [grid]);
-
-  useEffect(() => {
-    initializeGame();
-  }, []);
-
-  function initializeGame() {
-    let newGrid = JSON.parse(JSON.stringify(grid));
-    addNumber(newGrid);
-    addNumber(newGrid);
-    setGrid(newGrid);
-    setGridSet(true);
-  }
-
-  // Add a number
-  function addNumber(newGrid) {
-    let gridFull = false;
-    let addedNumber = false;
-    let attempts = 0;
-    while (!addedNumber) {
-      if (gridFull) return;
-
-      const number1 = Math.random() >= 0.9 ? 4 : 2;
-      const random_x = Math.floor(Math.random() * 4);
-      const random_y = Math.floor(Math.random() * 4);
-      attempts++;
-      if (newGrid[random_y][random_x] === 0) {
-        newGrid[random_y][random_x] = number1;
-        addedNumber = true;
-      }
-      if (attempts > 50) gridFull = true;
-    }
-  }
-
-  // Swipe left
-  function swipeLeft() {
-    let newGrid = JSON.parse(JSON.stringify(grid));
-    for (let i = 0; i < 4; i++) {
-      let b = newGrid[i];
-      let slow = 0;
-      let fast = 1;
-      while (slow < 4) {
-        if (fast === 4) {
-          fast = slow + 1;
-          slow++;
-          continue;
-        }
-        if (b[slow] === 0 && b[fast] === 0) {
-          fast++;
-        } else if (b[slow] === 0 && b[fast] !== 0) {
-          b[slow] = b[fast];
-          b[fast] = 0;
-          fast++;
-        } else if (b[slow] !== 0 && b[fast] === 0) {
-          fast++;
-        } else if (b[slow] !== 0 && b[fast] !== 0) {
-          if (b[slow] === b[fast]) {
-            b[slow] = b[slow] + b[fast];
-            b[fast] = 0;
-            fast = slow + 1;
-            slow++;
-          } else {
-            slow++;
-            fast = slow + 1;
-          }
-        }
-      }
-    }
-    if (JSON.stringify(grid) !== JSON.stringify(newGrid)) {
-      addNumber(newGrid);
-    }
-    setGrid(newGrid);
-    return true;
-  }
-
-  // Swipe right
-  function swipeRight() {
-    let newGrid = JSON.parse(JSON.stringify(grid));
-    for (let i = 3; i >= 0; i--) {
-      let b = newGrid[i];
-      let slow = b.length - 1;
-      let fast = slow - 1;
-      while (slow > 0) {
-        if (fast === -1) {
-          fast = slow - 1;
-          slow--;
-          continue;
-        }
-        if (b[slow] === 0 && b[fast] === 0) {
-          fast--;
-        } else if (b[slow] === 0 && b[fast] !== 0) {
-          b[slow] = b[fast];
-          b[fast] = 0;
-          fast--;
-        } else if (b[slow] !== 0 && b[fast] === 0) {
-          fast--;
-        } else if (b[slow] !== 0 && b[fast] !== 0) {
-          if (b[slow] === b[fast]) {
-            b[slow] = b[slow] + b[fast];
-            b[fast] = 0;
-            fast = slow - 1;
-            slow--;
-          } else {
-            slow--;
-            fast = slow - 1;
-          }
-        }
-      }
-    }
-    if (JSON.stringify(newGrid) !== JSON.stringify(grid)) {
-      addNumber(newGrid);
-    }
-    setGrid(newGrid);
-    return true;
-  }
-
-  // Swipe up
-  function swipeUp() {
-    let newGrid = JSON.parse(JSON.stringify(grid));
-    for (let i = 0; i < 4; i++) {
-      let slow = 0;
-      let fast = 1;
-      while (slow < 4) {
-        if (fast === 4) {
-          fast = slow + 1;
-          slow++;
-          continue;
-        }
-        if (newGrid[slow][i] === 0 && newGrid[fast][i] === 0) {
-          fast++;
-        } else if (newGrid[slow][i] === 0 && newGrid[fast][i] !== 0) {
-          newGrid[slow][i] = newGrid[fast][i];
-          newGrid[fast][i] = 0;
-          fast++;
-        } else if (newGrid[slow][i] !== 0 && newGrid[fast][i] === 0) {
-          fast++;
-        } else if (newGrid[slow][i] !== 0 && newGrid[fast][i] !== 0) {
-          if (newGrid[slow][i] === newGrid[fast][i]) {
-            newGrid[slow][i] = newGrid[slow][i] + newGrid[fast][i];
-            newGrid[fast][i] = 0;
-            fast = slow + 1;
-            slow++;
-          } else {
-            slow++;
-            fast = slow + 1;
-          }
-        }
-      }
-    }
-    if (JSON.stringify(grid) !== JSON.stringify(newGrid)) {
-      addNumber(newGrid);
-    }
-    setGrid(newGrid);
-    return true;
-  }
-
-  // Swipe right
-  function swipeDown() {
-    let newArray = JSON.parse(JSON.stringify(grid));
-    for (let i = 3; i >= 0; i--) {
-      let slow = newArray.length - 1;
-      let fast = slow - 1;
-      while (slow > 0) {
-        if (fast === -1) {
-          fast = slow - 1;
-          slow--;
-          continue;
-        }
-        if (newArray[slow][i] === 0 && newArray[fast][i] === 0) {
-          fast--;
-        } else if (newArray[slow][i] === 0 && newArray[fast][i] !== 0) {
-          newArray[slow][i] = newArray[fast][i];
-          newArray[fast][i] = 0;
-          fast--;
-        } else if (newArray[slow][i] !== 0 && newArray[fast][i] === 0) {
-          fast--;
-        } else if (newArray[slow][i] !== 0 && newArray[fast][i] !== 0) {
-          if (newArray[slow][i] === newArray[fast][i]) {
-            newArray[slow][i] = newArray[slow][i] + newArray[fast][i];
-            newArray[fast][i] = 0;
-            fast = slow - 1;
-            slow--;
-          } else {
-            slow--;
-            fast = slow - 1;
-          }
-        }
-      }
-    }
-    if (JSON.stringify(newArray) !== JSON.stringify(grid)) {
-      addNumber(newArray);
-    }
-    setGrid(newArray);
-    return true;
-  }
-
-  // Handle Key Press
-  function handleKeyPress(e) {
-    switch (e.key) {
-      case "ArrowUp":
-        swipeUp();
-        break;
-      case "ArrowDown":
-        swipeDown();
-        break;
-      case "ArrowLeft":
-        swipeLeft();
-        break;
-      case "ArrowRight":
-        swipeRight();
-        break;
-      default:
-        break;
-    }
+  function setNewGame() {
+    setBoard(new Board());
   }
 
   return (
-    <Swipe allowMouseEvents={true} onSwipeUp={swipeUp} onSwipeLeft={swipeLeft} onSwipeRight={swipeRight} onSwipeDown={swipeDown}>
     <div className="select-none h-[100vh] w-[100vw] bg-neutral-300 flex flex-col gap-0 justify-center items-center">
-      <Link href={"/"}>Home</Link>
-      <div className="select-none p-[2vmin] border bg-purple-900">
-        <div
-          className={`select-none grid-holder grid grid-cols-4 grid-rows-4 relative gap-[2vmin] border-4 rounded-md bg-purple-900 border-purple-900`}
+        <Link className="mb-10" href={'/'}>Home</Link>
+      <div className="flex justify-between w-[60vmin] mb-3">
+        <button
+          className="resetButton bg-purple-700 text-neutral-300"
+          onClick={setNewGame}
         >
-          {grid.map((row, index_y) => {
-            return row.map((box, index_x) => {
-              return (
-                <>
-                  <Cell />
-                  {box === 0 ? (
-                    <></>
-                  ) : (
-                    <Tile
-                      index_x={index_x}
-                      index_y={index_y}
-                      className={`border-4 border-purple-900 select-none `}
-                      value={box}
-                    />
-                  )}
-                </>
-              );
-            });
-          })}
+          New Game
+        </button>
+        <div className="">
+          <span className="text-2xl">Score</span>
+          <div className="text-right text-3xl mr-0 px-0">{board.score}</div>
         </div>
       </div>
-    </div></Swipe>
+      <BoardView board={board} setBoard={setBoard} />
+    </div>
   );
 }
 
-const Cell = ({ className }) => {
+function BoardView({ board, setBoard }) {
+  function handler(ev) {
+    if (board.hasWon()) return;
+
+    if (ev.keyCode >= 37 && ev.keyCode <= 40) {
+      let dir = ev.keyCode - 37;
+      let boardClone = Object.assign(
+        Object.create(Object.getPrototypeOf(board)),
+        board
+      );
+      let newBoard = boardClone.move(dir);
+      setBoard(newBoard);
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("keydown", handler);
+
+    return () => {
+      window.removeEventListener("keydown", handler);
+    };
+  });
+
+  const cells = board.cells.map((row, rowIndex) => {
+    return row.map((col, colIndex) => {
+      return <Cell key={rowIndex * 4 + colIndex} />;
+    });
+  });
+  const tiles = board.tiles
+    .filter((tile) => tile.value !== 0)
+    .map((tile, index) => <Tile tile={tile} key={index} />);
+
+  if (board.won) {
+    return (
+      <div className="grid grid-cols-1 grid-rows-2 gap-[1.5vmin] h-[60vmin] w-[60vmin] relative rounded-lg">
+        <img
+          className="w-full"
+          src={"/assets/game_2048/2048.gif"}
+          alt=""
+        />
+      </div>
+    );
+  }
+
+  else if (!board.hasLost())
+    return (
+      <div className="grid grid-cols-4 grid-rows-4 gap-[1.5vmin] h-[60vmin] w-[60vmin] relative">
+        {cells}
+        {tiles}
+      </div>
+    );
+  else {
+    return (
+      <div className="grid grid-cols-1 grid-rows-2 gap-[1.5vmin] h-[60vmin] w-[60vmin] relative rounded-lg overflow-hidden bg-none">
+        <img
+          className="w-full"
+          src={"/assets/game_2048/game-over.gif"}
+          alt=""
+        />
+        <img
+          className="w-full absolute bottom-0 cursor-pointer"
+          onClick={() => setBoard(new Board())}
+          src={"/assets/game_2048/try-again.gif"}
+          alt=""
+        />
+      </div>
+    );
+  }
+}
+
+function Cell() {
+  return (
+    <div className="flex justify-center items-center bg-red-300 rounded-lg"></div>
+  );
+}
+
+function Tile({ tile }) {
+  const classArray = ["tile"];
+  classArray.push("tile" + tile.value);
+
+  if (!tile.mergedInto) {
+    classArray.push(`postition_${tile.row}_${tile.column}`);
+  }
+
+  if (tile.mergedInto) classArray.push("merged");
+
+  if (tile.isNew()) classArray.push("new");
+
+  if (tile.hasMoved()) {
+    classArray.push(`row_from_${tile.fromRow()}_to_${tile.toRow()}`);
+    classArray.push(`column_from_${tile.fromColumn()}_to_${tile.toColumn()}`);
+    classArray.push("isMoving");
+  }
+
+  const classList = classArray.join(" ");
+
   return (
     <div
+      style={{
+        height: `14vmin`,
+        width: `14vmin`,
+        position: "absolute",
+        top: `calc(${tile.row}*15.4vmin)`,
+        left: `calc(${tile.column}*15.4vmin)`,
+      }}
       className={
-        "bg-red-300 flex justify-center items-center font-bold text-3xl md:text-6xl select-none h-[20vmin] w-[20vmin] rounded-xl " +
-        { className }
+        classList +
+        " flex justify-center items-center rounded-lg overflow-hidden outline-none"
       }
     ></div>
   );
-};
-
-const Tile = ({ index_x, index_y, value, className, children }) => {
-  return (
-    <div
-      className={"absolute overflow-hidden rounded-xl " + { className }}
-      style={{
-        height: "20vmin",
-        width: "20vmin",
-        top: `calc(${index_y}*22vmin)`,
-        left: `calc(${index_x}*22vmin)`,
-        transition: "left 100ms ease-in-out",
-        transition: "top 100ms ease-in-out",
-      }}
-    >
-      <img
-        className="h-full w-full"
-        src={`/assets/game_2048/${value}.gif`}
-        alt=""
-      />
-    </div>
-  );
-};
+}

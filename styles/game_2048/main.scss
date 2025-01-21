@@ -1,0 +1,198 @@
+.cell,
+.tile {
+  user-select: none;
+  cursor: default;
+}
+
+.details-box {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  justify-content: space-between;
+}
+
+.resetButton {
+  cursor: pointer;
+  font-size: 25px;
+  padding: 10px 20px;
+  border-radius: 7px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  &:hover {
+    background-color: #d3386a;
+    color: rgba(255, 255, 255, 1);
+  }
+}
+
+.score-box {
+  color: black;
+  min-width: 50px;
+  width: 70px;
+  padding: 5px 15px;
+  border-radius: 7px;
+}
+
+.cell,
+.tile {
+  display: inline-block;
+  font-size: 55px;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 7px;
+  font-family: "Clear Sans";
+  color: #766;
+  background-color: #3d2963;
+  background-position: center;
+}
+
+.tile0 {
+  background-color: #dcb;
+}
+
+.tile2 {
+  background-color: #eee;
+  background-image: url(/assets/game_2048/2.gif);
+}
+
+.tile4 {
+  background-color: #eec;
+  background-image: url(/assets/game_2048/4.gif);
+}
+
+.tile8 {
+  color: #ffe;
+  background-image: url(/assets/game_2048/8.gif);
+}
+
+.tile16 {
+  color: #ffe;
+  background-image: url(/assets/game_2048/16.gif);
+}
+
+.tile32 {
+  color: #ffe;
+  background-image: url(/assets/game_2048/32.gif);
+}
+
+.tile64 {
+  color: #ffe;
+  background-image: url(/assets/game_2048/64.gif);
+}
+
+.tile128 {
+  color: #ffe;
+  background-image: url(/assets/game_2048/128.gif);
+}
+
+.tile256 {
+  color: #ffe;
+  background-image: url(/assets/game_2048/256.gif);
+  font-size: 45px;
+}
+
+.tile512 {
+  color: #ffe;
+  background-image: url(/assets/game_2048/512.gif);
+  font-size: 45px;
+}
+
+.tile1024 {
+  color: #fff;
+  background-image: url(/assets/game_2048/1024.gif);
+  font-size: 35px;
+}
+
+.tile2048 {
+  position: absolute;
+  background-size: contain;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  padding: 0px;
+  color: #fff;
+  background-image: url(/assets/game_2048/2048.gif);
+  font-size: 35px;
+}
+
+.try-again {
+  z-index: 10;
+  height: 100px;
+  width: 100px;
+  background-image: url(/assets/game_2048/try-again.gif);
+}
+
+.tile {
+  position: absolute;
+}
+
+.merged {
+  display: none;
+}
+
+.tile.merged.isMoving {
+  display: inline;
+}
+
+.tile.new,
+.overlay {
+  animation-duration: 0.2s;
+  animation-name: newTile;
+  animation-fill-mode: forwards;
+  animation-delay: 0.15s;
+  transform: scale(0);
+}
+
+@keyframes newTile {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  left: 0px;
+  right: 0px;
+  font-size: 55px;
+  font-weight: bolder;
+  border-radius: 7px;
+}
+
+.tryAgain {
+  background-color: #876;
+  color: #fff;
+  height: 40px;
+  width: 200px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  border: 2px solid white;
+}
+
+.gameOver {
+  background-size: contain;
+  background-image: url(/assets/game_2048/game-over.gif);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  text-align: center;
+}
+
+.overlay .message {
+  color: #666;
+}
