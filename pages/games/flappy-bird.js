@@ -44,14 +44,14 @@ export default function FlappyBird() {
           if (!GOD_MODE_ENABLED)
             setBirdPos((birdPos) => setBirdPos(birdPos + birdDownVelocity));
           else setBirdPos(WALL_HEIGHT / 2);
-
+ 
           if (birdDownVelocity == 0) setBirdImageIndex(1);
           else if (birdDownVelocity < 0) setBirdImageIndex(2);
           else setBirdImageIndex(0);
 
           if (
             BIRD_LEFT_DISTANCE + BIRD_WIDTH > pipeLeft + PIPE_WIDTH &&
-            !scoreSet
+            !scoreSet && !gameOver
           ) {
             setScore((score) => score + 1);
             setScoreSet(true);

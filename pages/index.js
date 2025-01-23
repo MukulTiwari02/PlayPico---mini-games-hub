@@ -17,6 +17,7 @@ export default function Home() {
     <div className="h-[100vh] w-full bg-neutral-300 flex flex-col items-center justify-center">
       <Link href={"/games/flappy-bird"}>Flappy Bird</Link>
       <Link href={"/games/game_2048"}>2048</Link>
+      <Link href={"/games/snake"}>Snake</Link>
       {/* TODO: Make Responsive for mobiles */}
     </div>
   );
