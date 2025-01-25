@@ -1,4 +1,4 @@
-import Link from "next/link";
+import GameLayout from "@/components/GameLayout";
 import { useEffect, useState } from "react";
 
 export default function FlappyBird() {
@@ -196,8 +196,7 @@ export default function FlappyBird() {
   }, [startGame, gameOver, birdPos]);
 
   return (
-    <div className="h-[100vh] w-[100vw] bg-neutral-300 flex flex-col gap-0 justify-center items-center">
-      <Link href={"/"}>Home</Link>
+    <GameLayout>
       <div
         onClick={handler}
         className="border-2 select-none border-black border-b-0 relative flex justify-center items-center overflow-hidden"
@@ -338,6 +337,6 @@ export default function FlappyBird() {
           />
         </div>
       </div>
-    </div>
+    </GameLayout>
   );
 }

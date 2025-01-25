@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Snake from "@/helpers/snake";
-import Link from "next/link";
+import GameLayout from "@/components/GameLayout";
 
 const SnakeGame = () => {
   const gridSize = 30;
@@ -22,9 +22,7 @@ const SnakeGame = () => {
 
   const isSnakeDirectionEmpty = !snake.direction || snake.direction === "";
 
-  /**
-   * Generate a new random food position.
-   */
+ 
   const generateFood = () => {
     let newFood;
     do {
@@ -39,9 +37,6 @@ const SnakeGame = () => {
     return newFood;
   };
 
-  /**
-   * Restart the game.
-   */
   const restartGame = () => {
     setSnake(new Snake(initialSnakePosition, initialFoodPosition, gridSize));
     setFood(initialFoodPosition);
@@ -56,16 +51,16 @@ const SnakeGame = () => {
         const snakeCopy = new Snake([...snake.body], food, gridSize);
         snakeCopy.setDirection(snake.direction);
 
-        // Move the snake and check if food was eaten
+       
         if (snakeCopy.move()) {
           const newFood = generateFood();
-          setFood(newFood); // Generate new food
+          setFood(newFood); 
           snakeCopy.food = newFood;
           snakeCopy.grow();
           setScore(score + 1);
         }
 
-        // Check for self-collision
+        
         if (snakeCopy.hasCollided()) {
           setGameOver(true);
           setGameRunning(false);
@@ -127,7 +122,6 @@ const SnakeGame = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [gameOver, gameRunning]);
 
-  // Determine the message to display based on the game state
   let instructionMessage = "";
   if (gameOver) {
     instructionMessage = "Press Space to Restart";
@@ -141,9 +135,7 @@ const SnakeGame = () => {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-300 flex flex-col justify-center items-center">
-      {/* Score display */}
-      <Link href={"/"}>Home</Link>
+    <GameLayout>
       <div className="mb-2 text-xl font-bold text-gray-700">Score: {score}</div>
       <div className="flex mb-2 items-center justify-center gap-1">
         <label htmlFor="speed">Set Speed : </label>
@@ -157,7 +149,6 @@ const SnakeGame = () => {
         />
       </div>
 
-      {/* Game area */}
       <div
         className="relative flex overflow-hidden justify-center items-center border-4 border-black bg-violet-800"
         style={{
@@ -189,19 +180,17 @@ const SnakeGame = () => {
         ></div>
 
         {gameOver && (
-          <div className="absolute text-red-300 text-4xl font-bold">
+          <div className="absolute text-red-500 text-4xl font-bold">
             Game Over!
           </div>
         )}
-
-        {/* Instruction Message */}
         {instructionMessage && (
           <div className="absolute text-gray-200 text-2xl font-bold bottom-4">
             {instructionMessage}
           </div>
         )}
       </div>
-    </div>
+    </GameLayout>
   );
 };
 

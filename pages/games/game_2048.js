@@ -2,7 +2,7 @@ import { Board } from "@/helpers/2048";
 import { useEffect, useState } from "react";
 import "@/styles/game_2048/main.scss";
 import "@/styles/game_2048/styles.scss";
-import Link from "next/link";
+import GameLayout from "@/components/GameLayout";
 
 export default function GamePage_2048Animated() {
   const [board, setBoard] = useState(new Board());
@@ -12,8 +12,7 @@ export default function GamePage_2048Animated() {
   }
 
   return (
-    <div className="select-none h-[100vh] w-[100vw] bg-neutral-300 flex flex-col gap-0 justify-center items-center">
-        <Link className="mb-10" href={'/'}>Home</Link>
+    <GameLayout>
       <div className="flex justify-between w-[60vmin] mb-3">
         <button
           className="resetButton bg-purple-700 text-neutral-300"
@@ -27,7 +26,7 @@ export default function GamePage_2048Animated() {
         </div>
       </div>
       <BoardView board={board} setBoard={setBoard} />
-    </div>
+    </GameLayout>
   );
 }
 
@@ -66,16 +65,10 @@ function BoardView({ board, setBoard }) {
   if (board.won) {
     return (
       <div className="grid grid-cols-1 grid-rows-2 gap-[1.5vmin] h-[60vmin] w-[60vmin] relative rounded-lg">
-        <img
-          className="w-full"
-          src={"/assets/game_2048/2048.gif"}
-          alt=""
-        />
+        <img className="w-full" src={"/assets/game_2048/2048.gif"} alt="" />
       </div>
     );
-  }
-
-  else if (!board.hasLost())
+  } else if (!board.hasLost())
     return (
       <div className="grid grid-cols-4 grid-rows-4 gap-[1.5vmin] h-[60vmin] w-[60vmin] relative">
         {cells}
