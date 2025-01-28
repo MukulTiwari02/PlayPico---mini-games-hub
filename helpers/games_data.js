@@ -15,6 +15,10 @@ const gamesData = [
         gameName : 'Minesweeper',
         url: 'minesweeper'
     },
+    {
+        gameName: 'Tic-Tac-Toe',
+        url:'tic-tac-toe'
+    }
 ]
 
 export default gamesData;
