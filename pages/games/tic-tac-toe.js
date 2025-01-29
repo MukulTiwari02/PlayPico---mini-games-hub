@@ -47,7 +47,7 @@ const TicTacToeGamePage = () => {
             ? "Game Draw"
             : `${currentPlayer}'s Turn`}
         </div>
-        <div className="mt-3 main relative grid grid-cols-3 grid-rows-3 w-[60vmin] h-[60vmin]">
+        <div className="mt-3 main relative grid grid-cols-3 grid-rows-3 w-[55vmin] h-[55vmin]">
           {board.board.map((cell, cellIndex) => {
             return (
               <div
