@@ -1,7 +1,5 @@
 import { Board } from "@/helpers/2048";
 import { useEffect, useState } from "react";
-import "@/styles/game_2048/main.scss";
-import "@/styles/game_2048/styles.scss";
 import GameLayout from "@/components/GameLayout";
 
 export default function GamePage_2048Animated() {
