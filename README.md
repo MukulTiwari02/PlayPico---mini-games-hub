@@ -1,40 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 🎮 Mini Games Collection
 
-## Getting Started
+A collection of popular browser-based games built with Next.js, React, and Tailwind CSS. Features modern web development practices and responsive design.
 
-First, run the development server:
+[![Live Demo](https://img.shields.io/badge/Live_Demo-FF5722?style=for-the-badge&logo=vercel&logoColor=white)](https://mini-games-js.vercel.app/)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🕹️ Featured Games
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **2048**  
+   Slide numbered tiles to combine them and reach 2048
+   
+2. **Minesweeper**  
+   Classic puzzle game with flagging mechanics
+   
+3. **Flappy Bird**  
+   Arcade-style obstacle avoidance game
+   
+4. **Snake**  
+   Retro snake game with growing mechanics
+   
+5. **Tic Tac Toe**  
+   Classic 3x3 strategy game with AI opponent
+   
+6. **Wordle**  
+   Popular word guessing game with daily challenge
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## 🚀 Local Development Setup
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+### Prerequisites
+- Node.js v18 or higher
+- npm v9 or higher
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/MukulTiwari02/mini-games-js.git
+   ```
+2. Navigate to project directory:
+   ```bash
+   cd mini-games-js
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Start development server:
+   ```bash
+   npm run dev
+   ```
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Learn More
+### Available Scripts
+- `npm run dev`: Starts development server with Turbopack
+- `npm run build`: Creates production build
+- `npm start`: Starts production server
+- `npm run lint`: Runs ESLint static analysis
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Tech Stack
+- **Framework**: Next.js 15
+- **UI Library**: React 19 (Experimental)
+- **Styling**: Tailwind CSS + Styled Components
+- **Bundler**: Turbopack
+- **Input Handling**: react-use-keypress
+- **Swipe Gestures**: react-easy-swipe2
+- **CSS Preprocessor**: Sass
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+## 🌟 Features
+- Modern React architecture
+- Keyboard and touch controls
+- Game state persistence
+- Performance optimizations
+- Custom AI implementations
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🤝 Contributing
+1. Fork the repository
+2. Create a feature branch:
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m 'Add some feature'
+   ```
+4. Push to your branch:
+   ```bash
+   git push origin feature/your-feature
+   ```
+5. Open a Pull Request
 
-## Deploy on Vercel
+## 📬 Contact
+Mukul Tiwari - [GitHub](https://github.com/MukulTiwari02)  
+Project Link: [Mini Games Collection](https://github.com/MukulTiwari02/mini-games-js)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
