@@ -9,7 +9,22 @@ const Minesweeper = () => {
   const [flagsLeft, setFlagsLeft] = useState(minesCount);
   const [inFlagMode, setInFlagMode] = useState(false);
 
-  const handleTileClick = (x, y) => {
+  const [windowWidth, setWindowWidth] = useState(null);
+
+  useEffect(() => {
+    // Only runs on the client
+    const handleResize = () => setWindowWidth(window.innerWidth);
+
+    // Set initial width
+    handleResize();
+  }, []);
+
+  const handleTileClick = (e, x, y) => {
+    if (windowWidth < 1024 && inFlagMode) {
+      handleTileRightClick(e, x, y);
+      return;
+    }
+
     if (inFlagMode) {
       alert("Right click to add flag");
       return;
@@ -77,38 +92,56 @@ const Minesweeper = () => {
 
   return (
     <GameLayout>
-      <div className="mb-4 flex space-x-4">
+      <div className="mb-2 sm:mb-4 flex gap-4">
         <div>
-          <label className="block text-lg font-medium">Board Size:</label>
+          <label className="block text-base max-md:text-nowrap sm:text-lg font-medium">Board Size:</label>
           <input
             type="number"
             value={size}
             onChange={handleSizeChange}
             min="5"
             max="25"
-            className="mt-1 p-2 border border-gray-300 rounded-md"
+            className="mt-1 max-lg:hidden p-2 border border-gray-300 text-black rounded-md"
+          />
+          <input
+            type="number"
+            value={size}
+            onChange={handleSizeChange}
+            min="5"
+            max="25"
+            disabled
+            className="mt-1 disabled:bg-white lg:hidden p-2 border border-gray-300 text-black rounded-md"
           />
         </div>
         <div>
-          <label className="block text-lg font-medium">Mines:</label>
+          <label className="block sm:text-lg font-medium">Mines:</label>
           <input
             type="number"
             value={minesCount}
             onChange={handleMinesChange}
             min="1"
             max={size * size - 1}
-            className="mt-1 p-2 border border-gray-300 rounded-md"
+            className="mt-1 max-lg:hidden p-2 border border-gray-300 text-black rounded-md"
+          />
+          <input
+            type="number"
+            value={minesCount}
+            onChange={handleMinesChange}
+            min="1"
+            max={size * size - 1}
+            disabled
+            className="mt-1 disabled:bg-white lg:hidden p-2 border border-gray-300 text-black rounded-md"
           />
         </div>
         <button
           onClick={handleReset}
-          className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition"
+          className="px-4 py-2 ml-auto bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition"
         >
           Reset Game
         </button>
       </div>
 
-      <div className="mb-4 text-xl font-bold text-gray-700">
+      <div className="mb-2 sm:mb-4 text-lg sm:text-xl font-bold text-gray-700">
         Flags Left: {flagsLeft}
       </div>
 
@@ -124,24 +157,21 @@ const Minesweeper = () => {
       </button>
 
       <div
-        className="grid gap-1"
-        style={{
-          gridTemplateColumns: `repeat(${size}, 30px)`,
-          gridTemplateRows: `repeat(${size}, 30px)`,
-        }}
+        className={"grid gap-1"}
+        style={{gridTemplateColumns: `repeat(${size}, 1fr)`}}
       >
         {board.board.map((row, x) =>
           row.map((tile, y) => (
             <div
               key={`${x}-${y}`}
-              className={`relative flex items-center justify-center w-7 h-7 border border-gray-400 rounded-md cursor-pointer ${
+              className={`relative flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 border border-gray-400 rounded-md cursor-pointer ${
                 tile.revealed
-                  ? "bg-gray-200"
+                  ? "bg-[#b0bac5]"
                   : tile.flagged
                   ? "bg-yellow-300"
                   : "bg-gray-300"
               }`}
-              onClick={() => handleTileClick(x, y)}
+              onClick={(e) => handleTileClick(e, x, y)}
               onContextMenu={(e) => handleTileRightClick(e, x, y)}
             >
               {tile.revealed && tile.value === "X" && (

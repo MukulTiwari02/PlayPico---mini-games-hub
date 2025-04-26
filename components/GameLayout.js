@@ -11,7 +11,7 @@ const GameLayout = ({ children }) => {
 
   return (
     <Layout>
-      <div className="h-screen w-full bg-gradient-to-br from-[#03001e] via-[#7303c0] to-[#ec38bc] text-white flex flex-col items-center sm:justify-center max-lg:py-8 px-6 relative">
+      <div className="min-h-screen w-full bg-gradient-to-br from-[#03001e] via-[#7303c0] to-[#ec38bc] text-white flex flex-col items-center md:justify-center max-lg:py-8 px-6 relative">
         <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none"></div>
 
         <motion.div
@@ -28,7 +28,7 @@ const GameLayout = ({ children }) => {
         </motion.div>
 
         <motion.h1
-          className="text-5xl md:text-7xl font-extrabold text-neon-blue tracking-wide my-6 neon-glow uppercase"
+          className="text-4xl md:text-7xl font-extrabold text-neon-blue tracking-wide my-6 neon-glow uppercase"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -37,7 +37,7 @@ const GameLayout = ({ children }) => {
         </motion.h1>
 
         <motion.div
-          className="h-fit p-4 sm:p-8 bg-black/80 border-4 border-neon-pink rounded-2xl shadow-2xl backdrop-blur-lg neon-card relative"
+          className="h-fit max-lg:max-w-[90vw] p-4 sm:p-8 bg-black/80 border-4 border-neon-pink rounded-2xl shadow-2xl backdrop-blur-lg neon-card relative"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
