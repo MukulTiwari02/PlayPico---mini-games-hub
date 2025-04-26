@@ -1,4 +1,4 @@
-# 🎮 Mini Games Collection
+# 🎮 PlayPico---Mini Games Hub
 
 A collection of popular browser-based games built with Next.js, React, and Tailwind CSS. Features modern web development practices and responsive design.
 
