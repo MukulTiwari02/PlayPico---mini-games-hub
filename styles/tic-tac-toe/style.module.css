@@ -7,25 +7,25 @@
 .main > div:nth-child(1),
 .main > div:nth-child(2),
 .main > div:nth-child(3) {
-    border-bottom: 2px black solid;
+    border-bottom: 2px white solid;
 }
 
 .main > div:nth-child(7),
 .main > div:nth-child(8),
 .main > div:nth-child(9) {
-    border-top: 2px black solid;
+    border-top: 2px white solid;
 }
 
 .main > div:nth-child(1),
 .main > div:nth-child(4),
 .main > div:nth-child(7) {
-    border-right: 2px black solid;
+    border-right: 2px white solid;
 }
 
 .main > div:nth-child(3),
 .main > div:nth-child(6),
 .main > div:nth-child(9) {
-    border-left: 2px black solid;
+    border-left: 2px white solid;
 }
 .main > div:hover{
     background-color: rgba(245, 245, 220, 0.493);

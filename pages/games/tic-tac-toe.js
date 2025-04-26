@@ -32,7 +32,7 @@ const TicTacToeGamePage = () => {
   return (
     <GameLayout>
       <div className="flex flex-col items-center justify-center p-4">
-        <div className="mb-4 text-2xl font-bold text-gray-800">
+        <div className="mb-4 text-2xl font-bold text-gray-400">
           {winner
             ? `${winner} Wins!`
             : isDraw
@@ -50,7 +50,7 @@ const TicTacToeGamePage = () => {
               <div
                 onClick={() => handleCellClick(cellIndex)}
                 key={cellIndex}
-                className="text-8xl"
+                className="text-5xl sm:text-8xl"
               >
                 {cell}
               </div>
