@@ -11,7 +11,7 @@ const GameLayout = ({ children }) => {
 
   return (
     <Layout>
-      <div className="min-h-screen w-full bg-gradient-to-br from-[#03001e] via-[#7303c0] to-[#ec38bc] text-white flex flex-col items-center md:justify-center max-lg:py-8 px-6 relative">
+      <div className="min-h-screen w-full bg-gradient-to-br from-[#03001e] via-[#7303c0] to-[#ec38bc] text-white flex flex-col items-center md:justify-center py-5 max-lg:py-8 px-6 relative">
         <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none"></div>
 
         <motion.div

@@ -34,8 +34,9 @@ export default function GamePage_2048Animated() {
 function BoardView({ board, setBoard }) {
   function handler(ev) {
     if (board.hasWon()) return;
-
+    
     if (ev.keyCode >= 37 && ev.keyCode <= 40) {
+      ev.preventDefault();
       let dir = ev.keyCode - 37;
       let boardClone = Object.assign(
         Object.create(Object.getPrototypeOf(board)),

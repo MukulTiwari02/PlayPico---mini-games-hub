@@ -2,17 +2,17 @@ import GameLayout from "@/components/GameLayout";
 import { useEffect, useState } from "react";
 
 export default function FlappyBird() {
-  const WALL_HEIGHT = 600;
-  const WALL_WIDTH = 450;
-  const BIRD_HEIGHT = 50;
-  const BIRD_WIDTH = 60;
-  const BASE_HEIGHT = WALL_HEIGHT / 4;
-  const BIRD_LEFT_DISTANCE = WALL_WIDTH / 12;
+  const [WALL_HEIGHT, setWallHeight] = useState(600);
+  const [WALL_WIDTH, setWallWidth] = useState(450);
+  const [BIRD_HEIGHT, setBirdHeight] = useState(50);
+  const [BIRD_WIDTH, setBirdWidth] = useState(60);
+  const [PIPE_HEIGHT, setPipeHeight] = useState(600);
+  const [PIPE_WIDTH, setPipeWidth] = useState(100);
+  const [PIPE_GAP, setPipeGap] = useState(WALL_HEIGHT / 4);
+  const [BASE_HEIGHT, setBaseHeight] = useState(WALL_HEIGHT / 4);
+  const [BIRD_LEFT_DISTANCE, setBirdLeftDistance] = useState(WALL_WIDTH / 12);
   const GRAVITY = 1;
-  const PIPE_HEIGHT = 600;
-  const PIPE_GAP = WALL_HEIGHT / 4;
-  const PIPE_WIDTH = 100;
-  const velocity = 6;
+  const [velocity, setVelocity] = useState(6);
   const velocity_multiplier = 1.02;
   const [birdPos, setBirdPos] = useState(0);
   const [startGame, setStartGame] = useState(false);
@@ -25,6 +25,34 @@ export default function FlappyBird() {
   const [birdDownVelocity, setBirdDownVelocity] = useState(0);
   const [birdImageIndex, setBirdImageIndex] = useState(0);
   const birdImages = ["upflap", "midflap", "downflap"];
+
+  useEffect(() => {
+    // Only runs on the client
+    const handleResize = () => {
+      const windowInnerWidth = window.innerWidth;
+      const windowInnerHeight = window.innerHeight;
+      if (windowInnerWidth < 700) {
+        setWallWidth(windowInnerWidth * 0.75);
+        setWallHeight(windowInnerHeight * 0.7);
+        setBirdHeight(40);
+        setBirdWidth(50);
+        setPipeHeight(windowInnerHeight * 0.7);
+        setPipeWidth(100);
+        setPipeGap((windowInnerHeight * 0.7) / 5 + 10);
+        setBaseHeight((windowInnerHeight * 0.7) / 4);
+        setBirdLeftDistance((windowInnerWidth * 0.75) / 12);
+        setVelocity(5.5);
+      }
+    };
+
+    // Set initial width
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize)
+
+  }, []);
+
   const GOD_MODE_ENABLED = process.env.GOD_MODE_ENABLED || false;
 
   useEffect(() => {
@@ -44,14 +72,15 @@ export default function FlappyBird() {
           if (!GOD_MODE_ENABLED)
             setBirdPos((birdPos) => setBirdPos(birdPos + birdDownVelocity));
           else setBirdPos(WALL_HEIGHT / 2);
- 
+
           if (birdDownVelocity == 0) setBirdImageIndex(1);
           else if (birdDownVelocity < 0) setBirdImageIndex(2);
           else setBirdImageIndex(0);
 
           if (
             BIRD_LEFT_DISTANCE + BIRD_WIDTH > pipeLeft + PIPE_WIDTH &&
-            !scoreSet && !gameOver
+            !scoreSet &&
+            !gameOver
           ) {
             setScore((score) => score + 1);
             setScoreSet(true);
@@ -146,13 +175,6 @@ export default function FlappyBird() {
     return () => clearInterval(scoreInterval);
   }, [birdPos, pipeLeft, pipeTop]);
 
-  function flyBird() {
-    if (birdPos - BIRD_HEIGHT <= 0) setBirdPos(0);
-    else {
-      setBirdDownVelocity(-8);
-    }
-  }
-
   function handler(e) {
     if (!startGame) {
       // Start the game
@@ -183,6 +205,7 @@ export default function FlappyBird() {
   useEffect(() => {
     const handleKeyPress = (event) => {
       if ([" ", "ArrowUp"].includes(event.key)) {
+        event.preventDefault();
         handler(); // Trigger jump logic
       }
     };
@@ -197,144 +220,146 @@ export default function FlappyBird() {
 
   return (
     <GameLayout>
-      <div
-        onClick={handler}
-        className="border-2 select-none border-black border-b-0 relative flex justify-center items-center overflow-hidden"
-        style={{ height: `${WALL_HEIGHT}px`, width: `${WALL_WIDTH}px` }}
-      >
-        <img
-          className="h-full w-full"
-          src={
-            "/assets/flappy-bird/images/" +
-            (parseInt(score / 10) % 2 !== 0
-              ? "background-night.png"
-              : "background-day.png")
-          }
-          alt=""
-        />
-        {startGame && (
-          <div
-            className="absolute"
-            style={{
-              height: `${BIRD_HEIGHT}px`,
-              width: `${BIRD_WIDTH}px`,
-              top: `${birdPos}px`,
-              left: `${BIRD_LEFT_DISTANCE}px`,
-            }}
-          >
-            <img
-              className="aspect-auto scale-105 h-full w-full"
-              src={`/assets/flappy-bird/images/redbird-${birdImages[birdImageIndex]}.png`}
-              alt=""
-            />
-          </div>
-        )}
-        <div className="score absolute top-0 left-0 m-2 z-50 font-bold select-none ">
-          Score : {score}
-        </div>
-        {!startGame && (
-          <div
-            className="absolute z-10"
-            style={{
-              height: `${WALL_HEIGHT / 2}px`,
-              width: `${WALL_WIDTH / 2}px`,
-            }}
-          >
-            <img
-              className="h-full w-full"
-              src="/assets/flappy-bird/images/message.png"
-              alt=""
-            />
-          </div>
-        )}
-        {gameOver && startGame && (
-          <div
-            className="absolute z-10"
-            style={{
-              height: `${WALL_HEIGHT / 10}px`,
-              width: `${WALL_WIDTH / 2}px`,
-            }}
-          >
-            <img
-              className="h-full w-full"
-              src={"/assets/flappy-bird/images/gameover.png"}
-              alt=""
-            />
-          </div>
-        )}
-        {startGame && (
-          <>
+      <div className="">
+        <div
+          onClick={handler}
+          className="border-2 select-none border-black border-b-0 relative flex justify-center items-center overflow-hidden"
+          style={{ height: `${WALL_HEIGHT}px`, width: `${WALL_WIDTH}px` }}
+        >
+          <img
+            className="h-full w-full"
+            src={
+              "/assets/flappy-bird/images/" +
+              (parseInt(score / 10) % 2 !== 0
+                ? "background-night.png"
+                : "background-day.png")
+            }
+            alt=""
+          />
+          {startGame && (
             <div
-              className="z-5 absolute"
+              className="absolute"
               style={{
-                height: `${PIPE_HEIGHT}px`,
-                width: `${PIPE_WIDTH}px`,
-                top: `${pipeTop}px`,
-                left: `${pipeLeft}px`,
-                rotate: `180deg`,
+                height: `${BIRD_HEIGHT}px`,
+                width: `${BIRD_WIDTH}px`,
+                top: `${birdPos}px`,
+                left: `${BIRD_LEFT_DISTANCE}px`,
+              }}
+            >
+              <img
+                className="aspect-auto scale-105 h-full w-full"
+                src={`/assets/flappy-bird/images/redbird-${birdImages[birdImageIndex]}.png`}
+                alt=""
+              />
+            </div>
+          )}
+          <div className="score absolute top-0 left-0 m-2 z-50 font-bold select-none ">
+            Score : {score}
+          </div>
+          {!startGame && (
+            <div
+              className="absolute z-10"
+              style={{
+                height: `${WALL_HEIGHT / 2}px`,
+                width: `${WALL_WIDTH / 2}px`,
               }}
             >
               <img
                 className="h-full w-full"
-                src={
-                  "/assets/flappy-bird/images/pipe-" +
-                  (parseInt(score / 5) % 2 !== 0 ? "red.png" : "green.png")
-                }
+                src="/assets/flappy-bird/images/message.png"
                 alt=""
               />
             </div>
+          )}
+          {gameOver && startGame && (
             <div
-              className="z-5 absolute"
+              className="absolute z-10"
               style={{
-                height: `${PIPE_HEIGHT}px`,
-                width: `${PIPE_WIDTH}px`,
-                top: `${pipeTop + PIPE_HEIGHT + PIPE_GAP}px`,
-                left: `${pipeLeft}px`,
+                height: `${WALL_HEIGHT / 10}px`,
+                width: `${WALL_WIDTH / 2}px`,
               }}
             >
               <img
                 className="h-full w-full"
-                src={
-                  "/assets/flappy-bird/images/pipe-" +
-                  (parseInt(score / 5) % 2 !== 0 ? "red.png" : "green.png")
-                }
+                src={"/assets/flappy-bird/images/gameover.png"}
                 alt=""
               />
             </div>
-          </>
-        )}
-      </div>
-      <div
-        className="z-5 select-none flex overflow-hidden border-2 border-black border-t-0"
-        style={{ width: `${WALL_WIDTH}px` }}
-      >
-        <div
-          className="shrink-0"
-          style={{
-            height: `${BASE_HEIGHT}px`,
-            width: `${WALL_WIDTH}px`,
-            translate: `${-baseTranslate}px`,
-          }}
-        >
-          <img
-            className="h-full w-full"
-            src="/assets/flappy-bird/images/base.png"
-            alt=""
-          />
+          )}
+          {startGame && (
+            <>
+              <div
+                className="z-5 absolute"
+                style={{
+                  height: `${PIPE_HEIGHT}px`,
+                  width: `${PIPE_WIDTH}px`,
+                  top: `${pipeTop}px`,
+                  left: `${pipeLeft}px`,
+                  rotate: `180deg`,
+                }}
+              >
+                <img
+                  className="h-full w-full"
+                  src={
+                    "/assets/flappy-bird/images/pipe-" +
+                    (parseInt(score / 5) % 2 !== 0 ? "red.png" : "green.png")
+                  }
+                  alt=""
+                />
+              </div>
+              <div
+                className="z-5 absolute"
+                style={{
+                  height: `${PIPE_HEIGHT}px`,
+                  width: `${PIPE_WIDTH}px`,
+                  top: `${pipeTop + PIPE_HEIGHT + PIPE_GAP}px`,
+                  left: `${pipeLeft}px`,
+                }}
+              >
+                <img
+                  className="h-full w-full"
+                  src={
+                    "/assets/flappy-bird/images/pipe-" +
+                    (parseInt(score / 5) % 2 !== 0 ? "red.png" : "green.png")
+                  }
+                  alt=""
+                />
+              </div>
+            </>
+          )}
         </div>
         <div
-          className="shrink-0"
-          style={{
-            height: `${BASE_HEIGHT}px`,
-            width: `${WALL_WIDTH}px`,
-            translate: `${-baseTranslate}px`,
-          }}
+          className="z-5 select-none flex overflow-hidden border-2 border-black border-t-0"
+          style={{ width: `${WALL_WIDTH}px` }}
         >
-          <img
-            className="h-full w-full"
-            src="/assets/flappy-bird/images/base.png"
-            alt=""
-          />
+          <div
+            className="shrink-0"
+            style={{
+              height: `${BASE_HEIGHT}px`,
+              width: `${WALL_WIDTH}px`,
+              translate: `${-baseTranslate}px`,
+            }}
+          >
+            <img
+              className="h-full w-full"
+              src="/assets/flappy-bird/images/base.png"
+              alt=""
+            />
+          </div>
+          <div
+            className="shrink-0"
+            style={{
+              height: `${BASE_HEIGHT}px`,
+              width: `${WALL_WIDTH}px`,
+              translate: `${-baseTranslate}px`,
+            }}
+          >
+            <img
+              className="h-full w-full"
+              src="/assets/flappy-bird/images/base.png"
+              alt=""
+            />
+          </div>
         </div>
       </div>
     </GameLayout>
