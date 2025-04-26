@@ -47,7 +47,6 @@ const Minesweeper = () => {
     if (board.gameOver || board.board[x][y].revealed) return;
     if (inFlagMode) {
       board.toggleFlag(x, y);
-      console.log(board);
       setFlagsLeft(board.flagsLeft());
       const newBoard = Object.create(Object.getPrototypeOf(board));
       Object.defineProperties(
