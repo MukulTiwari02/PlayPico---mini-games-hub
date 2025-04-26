@@ -3,6 +3,7 @@ import Layout from "./Layout";
 import gamesData from "@/helpers/games_data";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
+import Footer from "./Footer";
 
 const GameLayout = ({ children }) => {
   const path = useRouter().asPath.substring(7);
@@ -11,7 +12,7 @@ const GameLayout = ({ children }) => {
 
   return (
     <Layout>
-      <div className="min-h-screen w-full bg-gradient-to-br from-[#03001e] via-[#7303c0] to-[#ec38bc] text-white flex flex-col items-center md:justify-center py-5 max-lg:py-8 px-6 relative">
+      <div className="min-h-screen w-full bg-gradient-to-br from-[#03001e] via-[#7303c0] to-[#ec38bc] text-white flex flex-col items-center md:justify-center pt-5 max-lg:pt-8 px-6 relative">
         <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none"></div>
 
         <motion.div
@@ -37,7 +38,7 @@ const GameLayout = ({ children }) => {
         </motion.h1>
 
         <motion.div
-          className="h-fit max-lg:max-w-[90vw] p-4 sm:p-8 bg-black/80 border-4 border-neon-pink rounded-2xl shadow-2xl backdrop-blur-lg neon-card relative"
+          className="h-fit mb-5 max-lg:max-w-[90vw] p-4 sm:p-8 bg-black/80 border-4 border-neon-pink rounded-2xl shadow-2xl backdrop-blur-lg neon-card relative"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
@@ -45,6 +46,7 @@ const GameLayout = ({ children }) => {
           <div className="absolute inset-0 border-4 h-fit border-transparent hover:border-neon-blue transition-all"></div>
           {children}
         </motion.div>
+        <Footer />
       </div>
     </Layout>
   );

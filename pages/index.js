@@ -3,6 +3,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import gamesData from "@/helpers/games_data";
 import Layout from "@/components/Layout";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -66,9 +67,7 @@ export default function Home() {
           ))}
         </div>
 
-        <footer className="mt-auto text-gray-200 text-sm text-center w-full border-t border-neon-cyan pt-4">
-          <p>&copy; {new Date().getFullYear()} PlayPico | Mini Games</p>
-        </footer>
+        <Footer />
       </div>
     </Layout>
   );

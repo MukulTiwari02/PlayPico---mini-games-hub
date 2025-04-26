@@ -1,7 +1,11 @@
-const Layout = ({children}) => {
-  return (
-    <div className="select-none h-[100vh] w-[100vw] overflow-x-hidden bg-neutral-300">{children}</div>
-  )
-}
+import Footer from "./Footer";
 
-export default Layout
+const Layout = ({ children }) => {
+  return (
+    <div className="select-none h-[100vh] w-[100vw] overflow-x-hidden bg-neutral-300">
+      {children}
+    </div>
+  );
+};
+
+export default Layout;
